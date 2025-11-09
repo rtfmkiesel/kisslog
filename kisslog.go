@@ -183,3 +183,18 @@ func (l *Logger) Fatal(v any, args ...any) {
 
 	os.Exit(1)
 }
+
+// Returns an error prefixed with the module name
+func (l *Logger) NewError(v any, args ...any) error {
+	var msg string
+	switch val := v.(type) {
+	case error:
+		msg = val.Error()
+	case string:
+		msg = fmt.Sprintf(val, args...)
+	default:
+		msg = fmt.Sprint(v)
+	}
+
+	return fmt.Errorf("%s: %s", l.module, msg)
+}
